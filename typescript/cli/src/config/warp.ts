@@ -34,7 +34,12 @@ export const WarpRouteConfigSchema = z.object({
   synthetics: z
     .array(
       z.object({
+        type: z
+          .literal(TokenType.collateral)
+          .or(z.literal(TokenType.collateral))
+          .or(z.literal(TokenType.synthetic)),
         chainName: z.string(),
+        address: z.string().optional(),
         name: z.string().optional(),
         symbol: z.string().optional(),
         totalSupply: z.number().optional(),
@@ -111,7 +116,10 @@ export async function createWarpConfig({
       address: baseAddress,
       isNft,
     },
-    synthetics: syntheticChains.map((chain) => ({ chainName: chain })),
+    synthetics: syntheticChains.map((chain) => ({
+      chainName: chain,
+      type: TokenType.collateral,
+    })),
   };
 
   if (isValidWarpRouteConfig(result)) {
