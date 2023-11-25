@@ -146,7 +146,11 @@ async function runBuildConfigStep({
   for (const synthetic of synthetics) {
     const sChainName = synthetic.chainName;
     configMap[sChainName] = {
-      type: TokenType.synthetic,
+      type: synthetic.type ? synthetic.type : TokenType.synthetic,
+      token:
+        synthetic.type === TokenType.collateral
+          ? synthetic.address!
+          : ethers.constants.AddressZero,
       name: synthetic.name || baseMetadata.name,
       symbol: synthetic.symbol || baseMetadata.symbol,
       totalSupply: synthetic.totalSupply || 0,
